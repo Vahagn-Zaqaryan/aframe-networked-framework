@@ -5,9 +5,14 @@
         <meta name="description" content="Dev Example — Networked-Aframe">
         <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
         <script>window.NAF || document.write('<script src="https://unpkg.com/networked-aframe/dist/networked-aframe.min.js">\x3C/script>')</script>
-        <script src="https://unpkg.com/aframe-randomizer-components@^3.0.1/dist/aframe-randomizer-components.min.js"></script>
         <script src="https://unpkg.com/aframe-particle-system-component@1.0.5/dist/aframe-particle-system-component.min.js"></script>
+        <script src="https://unpkg.com/aframe-randomizer-components@^3.0.1/dist/aframe-randomizer-components.min.js"></script>
+        <script src="https://unpkg.com/aframe-event-set-component@3.x.x/dist/aframe-event-set-component.min.js"></script>
+        <script src="https://unpkg.com/aframe-template-component@3.x.x/dist/aframe-template-component.min.js"></script>
+        <script src="https://unpkg.com/aframe-layout-component@3.x.x/dist/aframe-layout-component.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/nunjucks/2.3.0/nunjucks.min.js"></script>
         <script src="components/spawn-in-circle.js"></script>
+        <script src="components/template-looper.js"></script>
     </head>
     <body>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js"></script>
@@ -71,6 +76,17 @@
                         </a-entity>
                     </a-entity>
                 </template>
+
+                <script id="link" type="text/html">
+                    <a-entity class="link"
+                        link="{{ src }}"
+                        geometry="primitive: box; height: 1; width: 1"
+                        event-set__mouseenter="scale: 1.2 1.2 1"
+                        event-set__mouseleave="scale: 1 1 1"
+                        event-set__click="_target: #image-360; _delay: 300; material.src: ${src}"
+                        sound="on: click; src: #click-sound"
+                      ></a-entity>
+                  </script>
             </a-assets>
 
             <a-camera
@@ -85,6 +101,7 @@
                     visible="false"
                     random-color
                 ></a-sphere>
+                <a-cursor></a-cursor>
             </a-camera>
 
             <a-entity
@@ -104,7 +121,35 @@
                 position="5 5 5"
             ></a-entity>
 
-            <a-sky rotation="0 -90 0" color="#000"></a-sky>
+            <a-entity id="links" layout="type: line; margin: 1.5" position="0 1 -4">
+                <a-entity
+                    class="link"
+                    template="src: #link"
+                    data-src="scenes/spheres.html"
+                ></a-entity>
+
+                <a-entity
+                    class="link"
+                    template="src: #link"
+                    data-src="scenes/boxes.html"
+                    position="0 0 -3"
+                ></a-entity>
+            </a-entity>
+
+            <a-entity
+                id="template-src"
+                template="src: scenes/spheres.html"
+                position="0 0 -8"
+            ></a-entity>
+
+            <a-sky
+                id="mask"
+                color="#D7C1E0"
+                animation__fade="property: components.material.material.color; type: color; from: #D7C1E0; to: #000; dur: 200; startEvents: fade"
+                animation__fadeback="property: components.material.material.color; type: color; from: #000; to: #D7C1E0; dur: 200; startEvents: animationcomplete__fade"
+            ></a-sky>
+
+            <!-- <a-sky rotation="0 -90 0" color="#000"></a-sky> -->
         </a-scene>
 
         <script>
