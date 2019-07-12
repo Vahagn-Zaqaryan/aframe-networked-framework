@@ -6,7 +6,7 @@ let easyrtc = require("easyrtc");
 
 process.title = "node-easyrtc";
 
-let port = process.env.PORT || 8081;
+let port = process.env.PORT || 8080;
 
 let app = express();
 
@@ -20,7 +20,7 @@ let webServer = http.createServer(app);
 
 let socketServer = socketIo.listen(webServer, {"log level": 1});
 
-var myIceServers = [
+let myIceServers = [
     {"url": "stun:stun.l.google.com:19302"},
     {"url": "stun:stun1.l.google.com:19302"},
     {"url": "stun:stun2.l.google.com:19302"},
